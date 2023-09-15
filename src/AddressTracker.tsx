@@ -3,12 +3,13 @@ import bgDesktop from "./assets/pattern-bg-desktop.png";
 import bgMobile from "./assets/pattern-bg-mobile.png";
 import btn from "./assets/icon-arrow.svg";
 import { IPData } from "./Interfaces";
+import MapComponent from "./MapComponent";
 
 const API_KEY: string = "at_qqUBvtCC7uAL4PIY5chA3irpO5DlE";
 
-const AddressTracker: React.FC = ({ setSharedData }) => {
+const AddressTracker: React.FC = () => {
   const [ipData, setIpData] = useState<IPData | null>(null);
-  const [inputValue, setInputValue] = useState<string>("")
+  const [inputValue, setInputValue] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   async function getIP() {
@@ -23,7 +24,6 @@ const AddressTracker: React.FC = ({ setSharedData }) => {
 
       const data = await response.json();
       setIpData(data);
-      setSharedData(data)
       setError(null);
     } catch (error) {
       setError("Error fetching IP data. Please try again.");
@@ -76,6 +76,7 @@ const AddressTracker: React.FC = ({ setSharedData }) => {
 
       {/* Display Error */}
       {error && <div className="text-red-600">{error}</div>}
+      <MapComponent ipData={ipData}  />
     </div>
   );
 };

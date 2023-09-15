@@ -1,26 +1,32 @@
-import { useContext, useEffect, useState } from 'react';
-import { MapContainer, TileLayer } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import DataContext from './Context';
-import { IPData } from './Interfaces';
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import { IPData } from "./Interfaces";
 
-const MapComponent = () => {
-  const sharedData = useContext<IPData>(DataContext);
-  const [position, setPosition] = useState<[number, number]>([51.505, -0.09]);
+interface MapComponentProps {
+  ipData: IPData | null; // Specify the type for the ipData prop
+}
 
-  useEffect(() => {
-    // Check if sharedData exists and has location data
-    if (sharedData && sharedData.location && sharedData.location.lat && sharedData.location.lng) {
-      setPosition([sharedData.location.lat, sharedData.location.lng]);
-    }
-  }, [sharedData]);
+const MapComponent: React.FC<MapComponentProps> = ({ ipData, }) => {
+  const position: [number, number] = ipData?.location
+    ? [ipData.location.lat, ipData.location.lng]
+    : [51.505, -0.09]; 
 
   return (
-    <MapContainer center={position} zoom={13} scrollWheelZoom={false} className="h-[300px] w-full">
+    <MapContainer
+      center={position}
+      zoom={13}
+      scrollWheelZoom={false}
+      className="h-[300px] w-full"
+    >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+        <Marker position={position}>
+          <Popup>
+            A pretty CSS3 popup. <br /> Easily customizable.
+          </Popup>
+        </Marker>
     </MapContainer>
   );
 };
